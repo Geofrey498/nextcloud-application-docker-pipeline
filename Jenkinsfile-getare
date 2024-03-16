@@ -1,0 +1,42 @@
+pipeline{
+    tools{
+        maven "maven 3.9.6"
+    }
+    agent any
+    environment {
+        registry = "354281356452.dkr.ecr.ca-central-1.amazonaws.com/cardinal-otunga"
+    }
+    stages {
+        stage('1checkout'){
+            steps{
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Geofrey498/nextcloud-application-docker-pipeline.git']])
+            }
+        }
+        stage('2Build Docker Image'){
+            steps{
+                script{
+                    dockerImage = docker.build registry
+                    dockerImage.tag("$BUILD_NUMBER")
+                }
+            }
+        }
+        stage('push to ECR'){
+            steps{
+                script{
+                    sh "aws ecr get-login-password --region ca-central-1 | docker login --username AWS --password-stdin 354281356452.dkr.ecr.ca-central-1.amazonaws.com"
+                    sh "docker push 354281356452.dkr.ecr.ca-central-1.amazonaws.com/cardinal-otunga:$BUILD_NUMBER"
+                }
+            }
+        }
+
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    }
+
