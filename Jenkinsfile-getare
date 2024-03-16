@@ -9,8 +9,9 @@ pipeline{
     stages {
         stage('1checkout'){
             steps{
-                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Geofrey498/nextcloud-application-docker-pipeline.git']])
-            }
+                checkout scmGit(branches: [[name: '**']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Geofrey498/nextcloud-application-docker-pipeline.git']])
+                
+                }
         }
         stage('2Build Docker Image'){
             steps{
